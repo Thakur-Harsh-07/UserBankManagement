@@ -30,8 +30,22 @@ const Profile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Validate that fields are not empty
+        if (!formData.username.trim() || !formData.email.trim()) {
+            toast.error('Please fill in all fields');
+            return;
+        }
+
+        // Check if there are actual changes
+        if (formData.username === user.username && formData.email === user.email) {
+            toast.error('No changes detected');
+            setIsEditing(false);
+            return;
+        }
+
         setLoading(true);
-        const result = await updateProfile(formData.username, formData.email);
+        const result = await updateProfile(formData.username.trim(), formData.email.trim());
         setLoading(false);
         if (result.success) {
             setIsEditing(false);
