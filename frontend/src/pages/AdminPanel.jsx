@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { adminApi } from '../services/api';
 import toast from 'react-hot-toast';
@@ -10,6 +10,7 @@ const AdminPanel = () => {
     const [bankAccounts, setBankAccounts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('users');
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         if (isAdmin) {
@@ -33,6 +34,42 @@ const AdminPanel = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    // Filter users based on search term
+    const filteredUsers = useMemo(() => {
+        if (!searchTerm.trim()) return users;
+        
+        const term = searchTerm.toLowerCase();
+        return users.filter(user => 
+            user.username?.toLowerCase().includes(term) ||
+            user.email?.toLowerCase().includes(term) ||
+            user.role?.toLowerCase().includes(term) ||
+            user._id?.toLowerCase().includes(term)
+        );
+    }, [users, searchTerm]);
+
+    // Filter bank accounts based on search term
+    const filteredBankAccounts = useMemo(() => {
+        if (!searchTerm.trim()) return bankAccounts;
+        
+        const term = searchTerm.toLowerCase();
+        return bankAccounts.filter(account => 
+            account.bankName?.toLowerCase().includes(term) ||
+            account.accountNumber?.toLowerCase().includes(term) ||
+            account.accountHolderName?.toLowerCase().includes(term) ||
+            account.ifscCode?.toLowerCase().includes(term) ||
+            account.branchName?.toLowerCase().includes(term) ||
+            account.user?.toString().toLowerCase().includes(term)
+        );
+    }, [bankAccounts, searchTerm]);
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const handleClearSearch = () => {
+        setSearchTerm('');
     };
 
     if (!isAdmin) {
@@ -74,12 +111,45 @@ const AdminPanel = () => {
                 </button>
             </div>
 
+            <div className="search-filter-section">
+                <div className="search-box">
+                    <input
+                        type="text"
+                        placeholder={
+                            activeTab === 'users' 
+                                ? 'Search by username, email, role, or user ID...'
+                                : 'Search by bank name, IFSC, account number, holder name, or branch...'
+                        }
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        className="search-input"
+                    />
+                    {searchTerm && (
+                        <button 
+                            className="btn-clear-search"
+                            onClick={handleClearSearch}
+                            title="Clear search"
+                        >
+                            ✕
+                        </button>
+                    )}
+                </div>
+                {searchTerm && (
+                    <div className="search-results-info">
+                        Showing {activeTab === 'users' ? filteredUsers.length : filteredBankAccounts.length} of{' '}
+                        {activeTab === 'users' ? users.length : bankAccounts.length} results
+                    </div>
+                )}
+            </div>
+
             <div className="admin-content">
                 {activeTab === 'users' && (
                     <div className="users-table">
                         <h2>All Users</h2>
-                        {users.length === 0 ? (
-                            <div className="empty-state">No users found</div>
+                        {filteredUsers.length === 0 ? (
+                            <div className="empty-state">
+                                {searchTerm ? 'No users found matching your search' : 'No users found'}
+                            </div>
                         ) : (
                             <table>
                                 <thead>
@@ -91,7 +161,7 @@ const AdminPanel = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {users.map((user) => (
+                                    {filteredUsers.map((user) => (
                                         <tr key={user._id}>
                                             <td>{user.username}</td>
                                             <td>{user.email}</td>
@@ -112,8 +182,10 @@ const AdminPanel = () => {
                 {activeTab === 'accounts' && (
                     <div className="accounts-table">
                         <h2>All Bank Accounts</h2>
-                        {bankAccounts.length === 0 ? (
-                            <div className="empty-state">No bank accounts found</div>
+                        {filteredBankAccounts.length === 0 ? (
+                            <div className="empty-state">
+                                {searchTerm ? 'No bank accounts found matching your search' : 'No bank accounts found'}
+                            </div>
                         ) : (
                             <table>
                                 <thead>
@@ -127,7 +199,7 @@ const AdminPanel = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {bankAccounts.map((account) => (
+                                    {filteredBankAccounts.map((account) => (
                                         <tr key={account._id}>
                                             <td>{account.bankName}</td>
                                             <td>{account.accountNumber}</td>
