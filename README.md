@@ -251,11 +251,8 @@ JWT_SECRET=your_super_secret_jwt_key_here   # JWT secret key (keep this secure!)
 
 This project is licensed under the ISC License.
 
-## Author
-
-Your Name
 
 ## Support
 
-For support, please open an issue in the repository or contact [your-email@example.com]
+For support, please open an issue in the repository
 
