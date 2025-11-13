@@ -93,19 +93,27 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await authApi.updateProfile(token, { username, email });
             // Check if the update was successful
-            if (response.data && response.data.success) {
-                // Reload user data to get updated information
+            // Backend returns either { success: true, message: ... } or { message: ... }
+            if (response.data) {
+                // If success field exists, check it; otherwise, assume success if message exists
+                if (response.data.success === false) {
+                    // Explicit failure
+                    const message = response.data.message || 'Update failed';
+                    toast.error(message);
+                    return { success: false, message };
+                }
+                
+                // Success case - reload user data and show success message
                 await loadUser(token);
-                // Only show success if there were actual changes
-                if (response.data.message !== 'No changes detected') {
-                    toast.success('Profile updated successfully!');
+                const message = response.data.message || 'Profile updated successfully!';
+                if (message !== 'No changes detected') {
+                    toast.success(message);
                 }
                 return { success: true };
             } else {
-                // Handle case where response doesn't indicate success
-                const message = response.data?.message || 'Update failed';
-                toast.error(message);
-                return { success: false, message };
+                // No response data
+                toast.error('Update failed');
+                return { success: false, message: 'Update failed' };
             }
         } catch (error) {
             const message = error.response?.data?.message || 'Update failed. Please try again.';
