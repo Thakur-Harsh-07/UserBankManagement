@@ -37,8 +37,18 @@ const Profile = () => {
             return;
         }
 
+        // Check if there are actual changes before making API call
+        const trimmedUsername = formData.username.trim();
+        const trimmedEmail = formData.email.trim();
+        
+        if (trimmedUsername === user.username && trimmedEmail === user.email) {
+            // No changes detected, just exit edit mode without showing success
+            setIsEditing(false);
+            return;
+        }
+
         setLoading(true);
-        const result = await updateProfile(formData.username.trim(), formData.email.trim());
+        const result = await updateProfile(trimmedUsername, trimmedEmail);
         setLoading(false);
         if (result.success) {
             setIsEditing(false);
