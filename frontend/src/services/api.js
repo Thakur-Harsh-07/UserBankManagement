@@ -23,13 +23,7 @@ export const authApi = {
             }
         });
     },
-    updateProfile: async (token, data) => {
-        return await api.put('/auth/profile', data, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-    }
+   
 };
 
 // Bank Api

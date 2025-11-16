@@ -72,21 +72,6 @@ exports.getProfile = async (req, res) => {
     }   
 };
 
-exports.updateProfile = async (req, res) => {
-    try {
-        const { username, email } = req.body;
-        const user = await User.findById(req.user.userId);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }   
-        user.username = username || user.username;
-        user.email = email || user.email;
-        await user.save();
-        res.status(200).json({ message: 'Profile updated successfully' });
-    } catch (error) {
-        res.status(500).json({ message: 'Server error' });
-    }
-};
 
 exports.deleteProfile = async (req, res) => {
     try {

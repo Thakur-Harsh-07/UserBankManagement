@@ -8,8 +8,7 @@ router.post('/register', register);
 router.post('/login', login);
 // Get user profile route
 router.get('/profile', authMiddleware, getProfile);
-// Update user profile route
-router.put('/profile', authMiddleware, updateProfile);
+
 // Delete user profile route
 router.delete('/profile', authMiddleware, deleteProfile);
 module.exports = router;

@@ -89,38 +89,7 @@ export const AuthProvider = ({ children }) => {
         toast.success('Logged out successfully');
     };
 
-    const updateProfile = async (username, email) => {
-        try {
-            const response = await authApi.updateProfile(token, { username, email });
-            // Check if the update was successful
-            // Backend returns either { success: true, message: ... } or { message: ... }
-            if (response.data) {
-                // If success field exists, check it; otherwise, assume success if message exists
-                if (response.data.success === false) {
-                    // Explicit failure
-                    const message = response.data.message || 'Update failed';
-                    toast.error(message);
-                    return { success: false, message };
-                }
-                
-                // Success case - reload user data and show success message
-                await loadUser(token);
-                const message = response.data.message || 'Profile updated successfully!';
-                if (message !== 'No changes detected') {
-                    toast.success(message);
-                }
-                return { success: true };
-            } else {
-                // No response data
-                toast.error('Update failed');
-                return { success: false, message: 'Update failed' };
-            }
-        } catch (error) {
-            const message = error.response?.data?.message || 'Update failed. Please try again.';
-            toast.error(message);
-            return { success: false, message };
-        }
-    };
+    
 
     const value = {
         user,
@@ -129,7 +98,7 @@ export const AuthProvider = ({ children }) => {
         login,
         signup,
         logout,
-        updateProfile,
+        
         isAuthenticated: !!token,
         isAdmin: user?.role === 'admin'
     };
