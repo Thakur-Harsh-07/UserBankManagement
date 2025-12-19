@@ -9,7 +9,6 @@ import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import BankAccounts from './pages/BankAccounts';
 import AdminPanel from './pages/AdminPanel';
-import './App.css';
 
 function App() {
   return (

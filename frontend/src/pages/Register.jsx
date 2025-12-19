@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import './Register.css';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -50,12 +49,12 @@ const Register = () => {
     };
 
     return (
-        <div className="register-container">
-            <div className="register-card">
-                <h2>Register</h2>
+        <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-indigo-500 to-purple-600 p-5">
+            <div className="bg-white p-10 rounded-xl shadow-2xl w-full max-w-md">
+                <h2 className="text-center mb-8 text-gray-800 text-3xl font-bold">Register</h2>
                 <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="username">Username</label>
+                    <div className="mb-5">
+                        <label htmlFor="username" className="block mb-2 text-gray-700 font-medium">Username</label>
                         <input
                             type="text"
                             id="username"
@@ -64,10 +63,11 @@ const Register = () => {
                             onChange={handleChange}
                             required
                             placeholder="Enter your username"
+                            className="w-full px-3 py-3 border-2 border-gray-300 rounded-lg text-base transition-colors focus:outline-none focus:border-indigo-500 box-border"
                         />
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
+                    <div className="mb-5">
+                        <label htmlFor="email" className="block mb-2 text-gray-700 font-medium">Email</label>
                         <input
                             type="email"
                             id="email"
@@ -76,10 +76,11 @@ const Register = () => {
                             onChange={handleChange}
                             required
                             placeholder="Enter your email"
+                            className="w-full px-3 py-3 border-2 border-gray-300 rounded-lg text-base transition-colors focus:outline-none focus:border-indigo-500 box-border"
                         />
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
+                    <div className="mb-5">
+                        <label htmlFor="password" className="block mb-2 text-gray-700 font-medium">Password</label>
                         <input
                             type="password"
                             id="password"
@@ -89,10 +90,11 @@ const Register = () => {
                             required
                             placeholder="Enter your password"
                             minLength={6}
+                            className="w-full px-3 py-3 border-2 border-gray-300 rounded-lg text-base transition-colors focus:outline-none focus:border-indigo-500 box-border"
                         />
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="confirmPassword">Confirm Password</label>
+                    <div className="mb-5">
+                        <label htmlFor="confirmPassword" className="block mb-2 text-gray-700 font-medium">Confirm Password</label>
                         <input
                             type="password"
                             id="confirmPassword"
@@ -101,26 +103,31 @@ const Register = () => {
                             onChange={handleChange}
                             required
                             placeholder="Confirm your password"
+                            className="w-full px-3 py-3 border-2 border-gray-300 rounded-lg text-base transition-colors focus:outline-none focus:border-indigo-500 box-border"
                         />
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="role">Role</label>
+                    <div className="mb-5">
+                        <label htmlFor="role" className="block mb-2 text-gray-700 font-medium">Role</label>
                         <select
                             id="role"
                             name="role"
                             value={formData.role}
                             onChange={handleChange}
-                            className="select-input"
+                            className="w-full px-3 py-3 border-2 border-gray-300 rounded-lg text-base transition-colors focus:outline-none focus:border-indigo-500 box-border cursor-pointer"
                         >
                             <option value="user">User</option>
                         </select>
                     </div>
-                    <button type="submit" className="btn-primary" disabled={loading}>
+                    <button 
+                        type="submit" 
+                        className="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg text-base font-semibold cursor-pointer transition-all duration-200 mt-2.5 hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+                        disabled={loading}
+                    >
                         {loading ? 'Registering...' : 'Register'}
                     </button>
                 </form>
-                <p className="login-link">
-                    Already have an account? <Link to="/login">Login here</Link>
+                <p className="text-center mt-5 text-gray-600">
+                    Already have an account? <Link to="/login" className="text-indigo-500 no-underline font-medium hover:underline">Login here</Link>
                 </p>
             </div>
         </div>
